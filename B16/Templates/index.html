@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+    background-image: url('C:\\Users\\91939\\Desktop\\B16\\Templates\\bg.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    
+}
+
+label {
+    width: 150px; /* Adjust the width as needed */
+    height: 30px;
+    display: inline-block;
+}
+
+#form {
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    width: 400px;
+    padding: 2px;
+}
+
+
+</style>
+</head>
+<body background>
+
+<center>
+<h1 style="color: red">UNIVERSITY ADMISSION FORECASTING</h1>
+<div id="form"><ol>
+<form id="myForm" action="/predict" method="POST"   onsubmit="saveFormData()" >         
+<pre style="font-size: 20px;">
+TOEFL Score       : <input type="number" style="width: 8em;height: 2em;" id="TOEFL_Score" name="TOEFL Score" placeholder="TOEFL Score" required="required" min="0" max="120"><br>
+GRE Score         : <input type="number" style="width: 8em;height: 2em;" id="GRE_Score" name="GRE Score" placeholder="GRE Score" required="required" min="0" max="340"><br>
+University Rating : <input type="number" style="width: 8em;height: 2em;" id="University_Rating" name="University_Rating" placeholder="University Rating" required="required" min="1" max="5"><br>
+SOP               : <input type="number" style="width: 8em ;height: 2em;" id="SOP" placeholder="SOP" name="SOP" required="required" onkeypress="return check(event,value)" step="0.1" min="1" max="5"><br>
+LOR               : <input type="number" style="width: 8em ;height: 2em;" id="LOR" placeholder="LOR" name="LOR" required="required" onkeypress="return check(event,value)" step="0.1" min="1" max="5"><br>
+CGPA              : <input type="number" style="width: 8em ;height: 2em;" id="CGPA" placeholder="CGPA" name="CGPA" required="required" onkeypress="return check(event,value)" step="0.01" min="1" max="10"><br>
+Research          : <input type="number" style="width: 8em ;height: 2em;" id="Research" placeholder="Research" name="Research" required="required" min="0" max="1">
+    </pre>
+<input type="submit" id="submit" style="width:118px;height:55px;background-color: pink;font-size: 20px;"  value="Predict">&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" id="submit" style="width:118px;height:55px;background-color: pink; font-size: 18px;" onclick="Resetform()" value="Reset "><br><br>
+<input type="submit" id="submit2" style="width:228px;height:55px;background-color: pink;font-size: 20px;"  value="Recomend Universites" formaction="/rer">&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+</form>
+            
+            
+    </div>
+    
+    <div class="row">
+        {% if prediction_text %}
+        <h1 style="text-align: center; color:green"> The Chance of getting Admission for a student is  {{prediction_text}} </h1>
+        {% endif %}
+    </div>
+</center>
+
+<script>
+// THIS IS THE FUNCTION CALLED WHEN THE RESET BUTTON IS CLICKED AND CLEARS FORM DATA AND PREDICTION OUTPUT
+//##### BUT NOT DATA STORED IN THE SESSION 
+function Resetform() {
+  document.getElementById("myForm").reset();
+  document.querySelector('.row h1').innerText = ''; 
+}
+  
+// THIS FUNCTION IS CALLED AUTOMATICALLY WHEN WE RELOAD THE WINDOW AND FILL THE FORM WITH THE DATA STORED IN THE SESSION  EARLIER
+window.onload = function() {
+    // Check if there are saved form values in session storage
+    var savedFormData = sessionStorage.getItem('formData');
+    if(savedFormData) {
+        var formData = JSON.parse(savedFormData);
+        // Refill form fields with saved values
+        document.getElementById('TOEFL_Score').value = formData['TOEFL Score'] || '';
+        document.getElementById('GRE_Score').value = formData['GRE Score'] || '';
+        document.getElementById('University_Rating').value = formData['University Rating'] || '';
+        document.getElementById('SOP').value = formData['SOP'] || '';
+        document.getElementById('LOR').value = formData['LOR'] || '';
+        document.getElementById('CGPA').value = formData['CGPA'] || '';
+       document.getElementById('Research').value = formData['Research'] || '';
+    }
+}
+//WHEN WE CLICK ON THE PREDICT BUTTON THE FORM IS SUBMITTED AND AUTOMATICAALY DATA IS STORED IN THE SESSION WITH THIS IMPLEMENTATION OF CODE
+function saveFormData() {
+    // THIS IS FOR RETRIVING THE DATA FROM THE FORM
+    var formData = {
+        'TOEFL Score': document.getElementById('TOEFL_Score').value,
+        'GRE Score': document.getElementById('GRE_Score').value,
+        'University Rating': document.getElementById('University_Rating').value,
+        'SOP': document.getElementById('SOP').value,
+        'LOR': document.getElementById('LOR').value,
+        'CGPA': document.getElementById('CGPA').value,
+        'Research': document.getElementById('Research').value
+    };
+    // THIS IS FOR SAVING THE DATA IN THE FOEM
+    sessionStorage.setItem('formData', JSON.stringify(formData));
+}
+
+</script>
+</body>
+</html>
+
+
+
+
